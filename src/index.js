@@ -5,7 +5,7 @@ import App from './App';
 import Login from './login/login'
 ReactDOM.render(
   <React.StrictMode>
-    {1==1 ? <Login/>:<App />}
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -1,29 +1,26 @@
 import axios from 'axios'
 import React,{useState} from 'react'
+import { Link,useHistory } from 'react-router-dom'
 
 
-const BaseUrl = `https://django-rest-authentication.herokuapp.com/api/login/`
+const BaseUrl = "https://mytodo-with-authentication.herokuapp.com/api/login/"
+
 
 export default function Login() {
     const [Email,setemail] = useState('')
     const [Password,setpassword] = useState('')
-    const handlelogin= async(e)=>{
-        let UserCreden={
-            "email" : "patharv777@gmail.com",
-            "password" : "Pass@123"
-        }
-        console.log(Email,Password)
-        // fetch(BaseUrl, {
-        //     method: 'post',
-        //     headers: {'Content-Type':'application/json'},
-        //     body: {
-        //         email : "patharv777@gmail.com",
-        //             password : "Pass@123"            }
-        //    },{'Content-Type': 'text/plain'}).then((res)=>{console.log(res)});
+    const history = useHistory()
+    // send the credentails
+    const handlelogin= ()=>{
         axios.post(BaseUrl,{
-            email : "patharv777@gmail.com",
-            password : "Pass@123"
-        }).then((res)=>{console.log(res.data)}).catch((err)=>{console.log(err)})
+            email : Email,
+            password : Password
+        }).then((res)=>{
+            console.log(res.data.token) 
+            // storing in local variable
+            localStorage.setItem('tokens', res.data.token)
+            history.push("/todos")
+        }).catch((err)=>{alert("Invalid email or password")})
     }
     return (
         <div>
@@ -31,8 +28,8 @@ export default function Login() {
                 <div><input type="email" placeholder="Email" onChange={(e)=>{setemail(e.target.value)}}/></div>
                 <div><input type="password" placeholder="Password" onChange={(e)=>{setpassword(e.target.value)}}/></div>
                 <button type="submit" onClick={handlelogin}>Submit</button>
-                
             </div>
+            <Link to="/signup"> <button >Sign Up</button></Link>
         </div>
     )
 }

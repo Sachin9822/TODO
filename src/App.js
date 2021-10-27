@@ -3,38 +3,38 @@ import Todo_list from './todo_list/Todo_list.js';
 import React,{ useState, useRef,useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios'
-
-const BaseUrl = "https://django-rest-authentication.herokuapp.com/api/login/"
+import {  BrowserRouter as Router ,Route,Link,Switch } from 'react-router-dom';
+import Login from './login/login';
+import Signup from './signup/Signup';
+import { useHistory } from 'react-router';
+import Verify from './signup/Verify';
 function App() {
-  const [todo,settodo] = useState([])
-  const TodoListitemname= useRef() 
+  
+  // let token = localStorage.getItem('token')
+  const token = "Ssldk"
 
-  useEffect(()=>{
-    axios.get(BaseUrl).then((res)=>{
-      settodo(res.data)
-    })
-  },[])
-
-  function handleAddTodo (e) {
-    const name = TodoListitemname.current.value
-    if(name === '') return alert('empty title')
-    axios.post(BaseUrl,{
-      "title": name,
-      "description": "nothing",
-      "is_completed": false
-    }).then((res)=>{console.log(res.data)}).catch((err)=>{console.log(err.message)})
-    // settodo(previ => {
-    //   return [...previ,{id:uuidv4(),name:name,completed:false}]
-    // })
-    // TodoListitemname.current.value = null
-  }
+  console.log(token == null)
   return (
-    <>
-    <Todo_list todos={todo} />
-    <input ref={TodoListitemname} type="text"/>
-    <button onClick={handleAddTodo} >Add todo</button>
-    <button onClick={()=>{settodo([])}}>Clear All</button>
-    </>
+    <div>
+      {token == null ? <Login/>:(
+        <Router>
+          <Switch>
+            <Route exact path="/verify"><Verify/></Route>
+            <Route exact path="/signup">
+              <Signup/>
+            </Route>
+        <Route exact path="/todos">
+          <Todo_list />
+        </Route>
+        <Route exact path="/">
+          <Login/>
+        </Route>
+          </Switch>
+      </Router>
+      )}
+    </div>
+    
+    
   );
 }
 
